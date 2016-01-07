@@ -24,7 +24,7 @@
     <packaging>jar</packaging>
 
     <groupId>org.os890.cdi.addon</groupId>
-    <artifactId>cdi-dev-addon</artifactId>
+    <artifactId>cdi-duplicated-class-veto</artifactId>
 
     <name>CDI-DEV Add-on</name>
     <version>1.0.0</version>

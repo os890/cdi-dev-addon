@@ -26,8 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-public class DuplicateClassFinderExtension implements Extension {
-    private static final Logger LOG = Logger.getLogger(DuplicateClassFinderExtension.class.getName());
+public class DuplicateClassVetoExtension implements Extension {
+    private static final Logger LOG = Logger.getLogger(DuplicateClassVetoExtension.class.getName());
 
     private Map<String, Class> foundClasses = new HashMap<String, Class>();
 
@@ -39,9 +39,15 @@ public class DuplicateClassFinderExtension implements Extension {
             String resourceName = className.replace(".", "/") + ".class";
 
             Class firstBeanClass = foundClasses.get(className);
-            String msg = "first path:\n" + firstBeanClass.getClassLoader().getResource(resourceName).toString() + "\n" +
-                    "second path:\n" + beanClass.getClassLoader().getResource(resourceName).toString();
-            LOG.warning(msg);
+            String firstPath = firstBeanClass.getClassLoader().getResource(resourceName).toString();
+            String secondPath = beanClass.getClassLoader().getResource(resourceName).toString();
+            if (firstPath.equals(secondPath)) {
+                processAnnotatedType.veto();
+                LOG.info(firstPath + " was loaded twice and therefore a veto was triggered");
+            } else {
+                String msg = "\nfirst path:\n" + firstPath + "\n" + "second path:\n" + secondPath;
+                LOG.warning(msg);
+            }
         } else {
             foundClasses.put(className, beanClass);
         }
