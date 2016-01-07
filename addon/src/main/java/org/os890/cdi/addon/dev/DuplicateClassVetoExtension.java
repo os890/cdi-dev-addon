@@ -41,7 +41,7 @@ public class DuplicateClassVetoExtension implements Extension {
             Class firstBeanClass = foundClasses.get(className);
             String firstPath = firstBeanClass.getClassLoader().getResource(resourceName).toString();
             String secondPath = beanClass.getClassLoader().getResource(resourceName).toString();
-            if (firstPath.equals(secondPath)) {
+            if (firstPath.equals(secondPath) && firstBeanClass.getClassLoader() == beanClass.getClassLoader() /*needed for weld*/) {
                 processAnnotatedType.veto();
                 LOG.info(firstPath + " was loaded twice and therefore a veto was triggered");
             } else {
